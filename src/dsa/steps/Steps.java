@@ -1,3 +1,5 @@
+package dsa.steps;
+
 class Steps{
 
     void printPattern(int n, char ch){
