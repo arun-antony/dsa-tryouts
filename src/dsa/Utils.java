@@ -1,4 +1,4 @@
-package src.com.dsa;
+package dsa;
 
 public class Utils {
     

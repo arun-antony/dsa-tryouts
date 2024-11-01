@@ -57,6 +57,7 @@ public class PathFinder {
         //Hard coding for now
         int rows = grid.length;
         int cols = grid[0].length;
+        boolean hasReachedEnd = false;
        
 
         ArrayDeque<Cell> q = new ArrayDeque<Cell>();
@@ -69,7 +70,7 @@ public class PathFinder {
             Cell current = q.pop();
             visited.add(current);
 
-            if(current.equals(end)){
+            if(current.equals(end) || hasReachedEnd){
                 System.out.println("Reached destination - breaking loop");
                 break;
             }
@@ -79,35 +80,48 @@ public class PathFinder {
                 int kmax = 0;
                 
                 if(dir[0] != 0) {
-                    kmax = rows;
-                }else{
                     kmax = cols;
+                }else{
+                    kmax = rows;
                 }
 
-                for(int i = 1; i<kmax; i++){
+                for(int jump = 1; jump<kmax-1; jump++){
 
-                }
-                int x = current.x + dir[0];
-                int y = current.y + dir[1];
+                    int x = current.x + dir[0] * jump;
+                    int y = current.y + dir[1] * jump;
 
-                Cell cellToCheck = new Cell(x,y);
+                    Cell cellToCheck = new Cell(x,y);
 
-                if(cellToCheck.equals(end)){
-                    System.out.println("Next is destination - breaking loop");
-                    cellToCheck.previous = current;
-                    q.push(cellToCheck);
-                    break;
-                }
+                    if(cellToCheck.isValidCell(rows, cols)
+                        //&& !visited.contains(cellToCheck)
+                        //&& !q.contains(cellToCheck)
+                        ){
 
-            
-                if(cellToCheck.isValidCell(rows, cols)
-                    && !visited.contains(cellToCheck)){
-                    //Add condition here
-                    if(grid[cellToCheck.x][cellToCheck.y] == "*"){
-                        cellToCheck.previous = current;
-                        q.push(cellToCheck);
+                        if(jump > 1){
+                            cellToCheck.x+=dir[0];
+                            cellToCheck.y+=dir[1];
+                        }
+
+                        if(!visited.contains(cellToCheck) && !q.contains(cellToCheck)){
+                            //Add condition here
+                            if(grid[cellToCheck.x][cellToCheck.y] == "*"){
+                                cellToCheck.previous = current;
+                                q.push(cellToCheck);
+                            }
+
+                            if(grid[cellToCheck.x][cellToCheck.y] == "E"){
+                                cellToCheck.previous = current;
+                                q.push(cellToCheck);
+                                hasReachedEnd = true;
+                                break;
+                            }
+                        }
+
+                        
                     }
+
                 }
+                
             }
 
             //System.out.println("end of loop:"+q.size());
