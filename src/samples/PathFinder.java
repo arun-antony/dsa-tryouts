@@ -1,8 +1,6 @@
 package samples;
-import java.lang.reflect.Array;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.TreeMap;
 
 public class PathFinder {
     
@@ -15,21 +13,37 @@ public class PathFinder {
     };
     
     public static void main(String[] args) {
-        TreeMap<Integer, String> tree = new TreeMap<Integer, String>();
-
+        
         // * is vacant
         // # is obstacle
         String[][] grid = new String[][]{
-            {"S","*","#","*"},
+            {"E","*","*","*"},
             {"#","*","#","*"},
-            {"#","*","#","#"},
-            {"#","#","*","E"},
+            {"#","*","#","*"},
+            {"#","S","*","*"},
         };
 
        
         PathFinder pathFinder = new PathFinder();
-        Cell start = pathFinder.new Cell(0,0); // Init position of "S"
-        Cell end = pathFinder.new Cell(3,3);   // Init position of "E"
+
+        Cell start = pathFinder.new Cell(0, 0);//pathFinder.new Cell(0,0); // Init position of "S"
+        Cell end = pathFinder.new Cell(0,0);   // Init position of "E"
+
+        for(int i = 0; i<grid.length; i++){
+            for(int j = 0; j<grid[0].length; j++){
+                if(grid[i][j] == "S"){
+                    start.x = i;
+                    start.y = j; 
+                }
+
+                if(grid[i][j] == "E"){
+                    end.x = i;
+                    end.y = j; 
+                }
+            }
+        }
+
+        
         
         ArrayList<Cell> path = pathFinder.findPath(grid, start, end);
         System.out.println("Reached here:"+path.size());
@@ -39,6 +53,7 @@ public class PathFinder {
         if(item.equals(end)){
             while (item.previous != null){
                 item = item.previous;
+                System.out.println(item.toString());
                 steps++;
             }
             System.out.println("Num of steps:"+steps);
@@ -48,7 +63,7 @@ public class PathFinder {
 
         
         for (Cell seg : path) {
-            System.out.println(seg.toString());
+            //System.out.println(seg.toString());
         }
         
     }
@@ -59,6 +74,7 @@ public class PathFinder {
         int cols = grid[0].length;
         boolean hasReachedEnd = false;
        
+        
 
         ArrayDeque<Cell> q = new ArrayDeque<Cell>();
         q.push(start);
@@ -98,7 +114,7 @@ public class PathFinder {
                         ){
 
                         if(jump > 1 && grid[cellToCheck.x][cellToCheck.y] == "*"){
-                            System.out.println("jumped over ("+cellToCheck.x+","+cellToCheck.y+") by "+jump);
+                            System.out.println("jumped and landed at ("+cellToCheck.x+","+cellToCheck.y+") by "+jump);
                             cellToCheck.x+=dir[0];
                             cellToCheck.y+=dir[1];
 
@@ -110,7 +126,7 @@ public class PathFinder {
                             //Add condition here
                             if(grid[cellToCheck.x][cellToCheck.y] == "*"){
                                 cellToCheck.previous = current;
-                                q.push(cellToCheck);
+                                q.add(cellToCheck);
                             }
 
                             else if(grid[cellToCheck.x][cellToCheck.y] == "E"){
