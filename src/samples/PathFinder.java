@@ -22,7 +22,7 @@ public class PathFinder {
         String[][] grid = new String[][]{
             {"S","*","#","*"},
             {"#","*","#","*"},
-            {"#","*","#","*"},
+            {"#","*","#","#"},
             {"#","#","*","E"},
         };
 
@@ -97,9 +97,13 @@ public class PathFinder {
                         //&& !q.contains(cellToCheck)
                         ){
 
-                        if(jump > 1){
+                        if(jump > 1 && grid[cellToCheck.x][cellToCheck.y] == "*"){
+                            System.out.println("jumped over ("+cellToCheck.x+","+cellToCheck.y+") by "+jump);
                             cellToCheck.x+=dir[0];
                             cellToCheck.y+=dir[1];
+
+                            if(!cellToCheck.isValidCell(rows, cols)) continue;
+                        
                         }
 
                         if(!visited.contains(cellToCheck) && !q.contains(cellToCheck)){
@@ -109,7 +113,7 @@ public class PathFinder {
                                 q.push(cellToCheck);
                             }
 
-                            if(grid[cellToCheck.x][cellToCheck.y] == "E"){
+                            else if(grid[cellToCheck.x][cellToCheck.y] == "E"){
                                 cellToCheck.previous = current;
                                 q.push(cellToCheck);
                                 hasReachedEnd = true;
